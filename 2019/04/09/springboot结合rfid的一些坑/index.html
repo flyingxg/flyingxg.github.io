@@ -8,13 +8,13 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>springboot结合RFID | 燃烧我的虚拟机</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="最近接了一个学弟的毕设，要把RFID硬件和springboot连起来做一个刷卡功能，就尝试了一下。其实就是一个DTU的连接思路，创建socket服务器，然后去和硬件通信。  原料 RFID读卡模块RC522串口读写器13.56mhz ic卡射频模块开发板  Springboot  mina  串口转TCP工具（这个应该可以写代码实现的）">
+  <meta name="description" content="最近接了一个学弟的毕设，要把RFID硬件和springboot连起来做一个刷卡功能，就尝试了一下。其实就是一个DTU的连接思路，创建socket服务器，然后去和硬件通信。">
 <meta name="keywords" content="springboot,RFID">
 <meta property="og:type" content="article">
 <meta property="og:title" content="springboot结合RFID">
 <meta property="og:url" content="http://yoursite.com/2019/04/09/springboot结合rfid的一些坑/index.html">
 <meta property="og:site_name" content="燃烧我的虚拟机">
-<meta property="og:description" content="最近接了一个学弟的毕设，要把RFID硬件和springboot连起来做一个刷卡功能，就尝试了一下。其实就是一个DTU的连接思路，创建socket服务器，然后去和硬件通信。  原料 RFID读卡模块RC522串口读写器13.56mhz ic卡射频模块开发板  Springboot  mina  串口转TCP工具（这个应该可以写代码实现的）">
+<meta property="og:description" content="最近接了一个学弟的毕设，要把RFID硬件和springboot连起来做一个刷卡功能，就尝试了一下。其实就是一个DTU的连接思路，创建socket服务器，然后去和硬件通信。">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://wx3.sinaimg.cn/mw690/005ESWIfly1g1wd5q0keej30rs0fy7au.jpg">
 <meta property="og:image" content="http://wx1.sinaimg.cn/mw690/005ESWIfly1g1wd5qh8apj30jv0fsmy1.jpg">
@@ -23,10 +23,10 @@
 <meta property="og:image" content="http://wx4.sinaimg.cn/mw690/005ESWIfly1g1wd5s0ws5j31hc0u0aeq.jpg">
 <meta property="og:image" content="http://wx2.sinaimg.cn/mw690/005ESWIfly1g1wd5sey4qj310d0j7mxa.jpg">
 <meta property="og:image" content="http://wx3.sinaimg.cn/mw690/005ESWIfly1g1wd5srcczj30jv0fs3zm.jpg">
-<meta property="og:updated_time" content="2019-04-09T06:55:44.744Z">
+<meta property="og:updated_time" content="2019-04-09T06:56:17.424Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="springboot结合RFID">
-<meta name="twitter:description" content="最近接了一个学弟的毕设，要把RFID硬件和springboot连起来做一个刷卡功能，就尝试了一下。其实就是一个DTU的连接思路，创建socket服务器，然后去和硬件通信。  原料 RFID读卡模块RC522串口读写器13.56mhz ic卡射频模块开发板  Springboot  mina  串口转TCP工具（这个应该可以写代码实现的）">
+<meta name="twitter:description" content="最近接了一个学弟的毕设，要把RFID硬件和springboot连起来做一个刷卡功能，就尝试了一下。其实就是一个DTU的连接思路，创建socket服务器，然后去和硬件通信。">
 <meta name="twitter:image" content="http://wx3.sinaimg.cn/mw690/005ESWIfly1g1wd5q0keej30rs0fy7au.jpg">
   
     <link rel="alternative" href="/atom.xml" title="燃烧我的虚拟机" type="application/atom+xml">
@@ -178,6 +178,7 @@
         <blockquote>
 <p>最近接了一个学弟的毕设，要把RFID硬件和springboot连起来做一个刷卡功能，就尝试了一下。其实就是一个DTU的连接思路，创建socket服务器，然后去和硬件通信。</p>
 </blockquote>
+<a id="more"></a>
 <h2 id="原料"><a href="#原料" class="headerlink" title="原料"></a><strong>原料</strong></h2><ol>
 <li><p>RFID读卡模块RC522串口读写器13.56mhz ic卡射频模块开发板</p>
 </li>
@@ -188,7 +189,6 @@
 <li><p>串口转TCP工具（这个应该可以写代码实现的）</p>
 </li>
 </ol>
-<a id="more"></a>
 <p><img src="http://wx3.sinaimg.cn/mw690/005ESWIfly1g1wd5q0keej30rs0fy7au.jpg" alt="1554789980225"></p>
 <h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p><img src="http://wx1.sinaimg.cn/mw690/005ESWIfly1g1wd5qh8apj30jv0fsmy1.jpg" alt="1554790349923"></p>
 <p><img src="http://wx2.sinaimg.cn/mw690/005ESWIfly1g1wd5qtg12j31hc0sx49n.jpg" alt="1554790375069"></p>
