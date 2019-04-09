@@ -144,6 +144,110 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-springboot结合rfid的一些坑" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/09/springboot结合rfid的一些坑/">springboot结合rfid的一些坑</a>
+    </h1>
+  
+
+        
+        <a href="/2019/04/09/springboot结合rfid的一些坑/" class="archive-article-date">
+  	<time datetime="2019-04-09T06:01:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>最近接了一个学弟的毕设，要把RFID硬件和springboot连起来做一个刷卡功能，就尝试了一下。其实就是一个DTU的连接思路，创建socket服务器，然后去和硬件通信。</p>
+</blockquote>
+<h2 id="原料"><a href="#原料" class="headerlink" title="原料"></a><strong>原料</strong></h2><ol>
+<li><p>RFID读卡模块RC522串口读写器13.56mhz ic卡射频模块开发板</p>
+</li>
+<li><p>Springboot</p>
+</li>
+<li><p>mina</p>
+</li>
+<li><p>串口转TCP工具（这个应该可以写代码实现的）</p>
+</li>
+</ol>
+<p><img src="http://wx3.sinaimg.cn/mw690/005ESWIfly1g1wd5q0keej30rs0fy7au.jpg" alt="1554789980225"></p>
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p><img src="http://wx1.sinaimg.cn/mw690/005ESWIfly1g1wd5qh8apj30jv0fsmy1.jpg" alt="1554790349923"></p>
+<p><img src="http://wx2.sinaimg.cn/mw690/005ESWIfly1g1wd5qtg12j31hc0sx49n.jpg" alt="1554790375069"></p>
+<p>​    其实控制台只要能出来这些HEX字符串基本上来说就没什么问题了。但是这个mina有一个坑，这个<code>messageReceived()</code>方法不执行，控制台能打印log但是就是拿不到，所以要照着这个<code>loggingFilter</code>自己写一个filter加到这个mina里面。</p>
+<p>​    还有一种方法是在message后面换行他就认为结束来着，回调这个messageReceived，但是硬件上加换行肯定是行不通。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MessageFilter</span> <span class="keyword">extends</span> <span class="title">IoFilterAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; receiveList = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">messageReceived</span><span class="params">(NextFilter nextFilter, IoSession session, Object message)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(message);</span><br><span class="line">        receiveList.add(StringUtils.bytesToHex1(    ((AbstractIoBuffer)message).array()    ));</span><br><span class="line">        nextFilter.messageReceived(session, message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IoAcceptor <span class="title">ioAcceptor</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        log.info(<span class="string">"正在启动socket服务端。。。。"</span>);</span><br><span class="line">        <span class="comment">//监听传入 连接的对象</span></span><br><span class="line">        IoAcceptor acceptor=<span class="keyword">new</span> NioSocketAcceptor();</span><br><span class="line">        <span class="comment">//记录所有的信息，比如创建session(会话)，接收消息，发送消息，关闭会话等</span></span><br><span class="line">        acceptor.getFilterChain().addLast( <span class="string">"message"</span>, messageFilter() );</span><br><span class="line">        <span class="comment">//ProtocolCodecFilter(协议编解码过滤器).这个过滤器用来转换二进制或协议的专用数据到消息对象中</span></span><br><span class="line">        acceptor.getFilterChain().addLast(<span class="string">"codec"</span>, <span class="keyword">new</span> ProtocolCodecFilter(<span class="keyword">new</span> TextLineCodecFactory(Charset.forName(<span class="string">"UTF-8"</span>))));</span><br><span class="line"></span><br><span class="line">        <span class="comment">//创建一个handler来实时处理客户端的连接和请求，这个handler 类必须实现 IoHandler这个接口。</span></span><br><span class="line">        acceptor.setHandler(<span class="keyword">new</span> ByteServerHandler());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//设置读写缓冲区大小</span></span><br><span class="line">        acceptor.getSessionConfig().setReadBufferSize( <span class="number">6</span> );</span><br><span class="line"></span><br><span class="line">        <span class="comment">//空闲时间   通道均在10 秒内无任何操作就进入空闲状态</span></span><br><span class="line">        acceptor.getSessionConfig().setIdleTime( IdleStatus.BOTH_IDLE, <span class="number">10</span> );</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        acceptor.bind(inetSocketAddress());</span><br><span class="line">        log.info(<span class="string">"socket 服务端 已经启动。。。。"</span>);</span><br><span class="line">        <span class="keyword">return</span> acceptor;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>​    剩下的就再写一个接口就完事了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/rfid"</span>)</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Result <span class="title">rfid</span><span class="params">()</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">        messageFilter.receiveList.clear();</span><br><span class="line">        Set&lt;IoSession&gt; sessions = ByteServerHandler.sessions;</span><br><span class="line">        List&lt;String&gt; resultList = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (IoSession s: sessions</span><br><span class="line">        ) &#123;</span><br><span class="line">            <span class="comment">//byte[] bytes = StringUtils.toBytes(org.apache.commons.lang3.StringUtils.lowerCase("7F0400F7"));</span></span><br><span class="line">            s.write(IoBuffer.wrap(StringUtils.toBytes(org.apache.commons.lang3.StringUtils.lowerCase(<span class="string">"7F0352F7"</span>))));</span><br><span class="line">            Thread.sleep(<span class="number">100</span>);</span><br><span class="line">            s.write(IoBuffer.wrap(StringUtils.toBytes(org.apache.commons.lang3.StringUtils.lowerCase(<span class="string">"7F0400F7"</span>))));</span><br><span class="line">            Thread.sleep(<span class="number">100</span>);</span><br><span class="line">            s.write(IoBuffer.wrap(StringUtils.toBytes(org.apache.commons.lang3.StringUtils.lowerCase(<span class="string">"7F0BF7"</span>))));</span><br><span class="line">            Thread.sleep(<span class="number">100</span>);</span><br><span class="line">            <span class="keyword">for</span> (String s1: messageFilter.receiveList</span><br><span class="line">            ) &#123;</span><br><span class="line">                resultList.add(org.apache.commons.lang3.StringUtils.upperCase(s1));</span><br><span class="line">            &#125;</span><br><span class="line">            messageFilter.receiveList.clear();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(resultList.isEmpty())&#123;</span><br><span class="line">            <span class="keyword">return</span> ResultGenerator.genFailResult(<span class="string">"RFID未连接"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(<span class="string">"55"</span>.equals(resultList.get(<span class="number">0</span>).substring(<span class="number">6</span>,<span class="number">8</span>)))&#123;</span><br><span class="line">            <span class="keyword">return</span> ResultGenerator.genFailResult(<span class="string">"未扫描到卡片"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(<span class="string">"F7"</span>.equals(resultList.get(<span class="number">0</span>).substring(<span class="number">6</span>,<span class="number">8</span>)) &amp;&amp; <span class="string">"F7"</span>.equals(resultList.get(<span class="number">1</span>).substring(<span class="number">10</span>,<span class="number">12</span>)))&#123;</span><br><span class="line">            <span class="keyword">return</span> ResultGenerator.genSuccessResult(resultList.get(<span class="number">1</span>).substring(<span class="number">2</span>,<span class="number">10</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ResultGenerator.genSuccessResult(resultList);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>​    开发板文档里面的东西其实挺多的，仅仅简单的实现了一个卡号。</p>
+<p><img src="http://wx1.sinaimg.cn/mw690/005ESWIfly1g1wd5ridx4j31gm0pjgml.jpg" alt="1554790924875"></p>
+<p><img src="http://wx4.sinaimg.cn/mw690/005ESWIfly1g1wd5s0ws5j31hc0u0aeq.jpg" alt="1554790951726"></p>
+<p><img src="http://wx2.sinaimg.cn/mw690/005ESWIfly1g1wd5sey4qj310d0j7mxa.jpg" alt="1554790970725"></p>
+<p><img src="http://wx3.sinaimg.cn/mw690/005ESWIfly1g1wd5srcczj30jv0fs3zm.jpg" alt="1554791021883"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">springboot</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">RFID</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/04/09/springboot结合rfid的一些坑/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -306,6 +410,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">springboot</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">RFID</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>
