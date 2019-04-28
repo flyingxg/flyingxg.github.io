@@ -6,28 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>springboot结合RFID | 燃烧我的虚拟机</title>
+  <title>resume | 燃烧我的虚拟机</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="最近接了一个学弟的毕设，要把RFID硬件和springboot连起来做一个刷卡功能，就尝试了一下。其实就是一个DTU的连接思路，创建socket服务器，然后去和硬件通信。">
-<meta name="keywords" content="springboot,RFID">
+  <meta name="description" content="个人信息">
+<meta name="keywords" content="简历">
 <meta property="og:type" content="article">
-<meta property="og:title" content="springboot结合RFID">
-<meta property="og:url" content="http://yoursite.com/2019/04/09/springboot结合rfid的一些坑/index.html">
+<meta property="og:title" content="resume">
+<meta property="og:url" content="http://yoursite.com/2019/04/28/resume/index.html">
 <meta property="og:site_name" content="燃烧我的虚拟机">
-<meta property="og:description" content="最近接了一个学弟的毕设，要把RFID硬件和springboot连起来做一个刷卡功能，就尝试了一下。其实就是一个DTU的连接思路，创建socket服务器，然后去和硬件通信。">
+<meta property="og:description" content="个人信息">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://wx3.sinaimg.cn/mw690/005ESWIfly1g1wd5q0keej30rs0fy7au.jpg">
-<meta property="og:image" content="http://wx1.sinaimg.cn/mw690/005ESWIfly1g1wd5qh8apj30jv0fsmy1.jpg">
-<meta property="og:image" content="http://wx2.sinaimg.cn/mw690/005ESWIfly1g1wd5qtg12j31hc0sx49n.jpg">
-<meta property="og:image" content="http://wx1.sinaimg.cn/mw690/005ESWIfly1g1wd5ridx4j31gm0pjgml.jpg">
-<meta property="og:image" content="http://wx4.sinaimg.cn/mw690/005ESWIfly1g1wd5s0ws5j31hc0u0aeq.jpg">
-<meta property="og:image" content="http://wx2.sinaimg.cn/mw690/005ESWIfly1g1wd5sey4qj310d0j7mxa.jpg">
-<meta property="og:image" content="http://wx3.sinaimg.cn/mw690/005ESWIfly1g1wd5srcczj30jv0fs3zm.jpg">
-<meta property="og:updated_time" content="2019-04-09T06:56:17.424Z">
+<meta property="og:updated_time" content="2019-04-28T02:14:04.757Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="springboot结合RFID">
-<meta name="twitter:description" content="最近接了一个学弟的毕设，要把RFID硬件和springboot连起来做一个刷卡功能，就尝试了一下。其实就是一个DTU的连接思路，创建socket服务器，然后去和硬件通信。">
-<meta name="twitter:image" content="http://wx3.sinaimg.cn/mw690/005ESWIfly1g1wd5q0keej30rs0fy7au.jpg">
+<meta name="twitter:title" content="resume">
+<meta name="twitter:description" content="个人信息">
   
     <link rel="alternative" href="/atom.xml" title="燃烧我的虚拟机" type="application/atom+xml">
   
@@ -155,73 +147,65 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-springboot结合rfid的一些坑" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-resume" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      springboot结合RFID
+      resume
     </h1>
   
 
         
-        <a href="/2019/04/09/springboot结合rfid的一些坑/" class="archive-article-date">
-  	<time datetime="2019-04-09T06:01:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-09</time>
+        <a href="/2019/04/28/resume/" class="archive-article-date">
+  	<time datetime="2019-04-28T01:45:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-28</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
-<p>最近接了一个学弟的毕设，要把RFID硬件和springboot连起来做一个刷卡功能，就尝试了一下。其实就是一个DTU的连接思路，创建socket服务器，然后去和硬件通信。</p>
-</blockquote>
+        <h1 id="个人信息">个人信息</h1>
 <a id="more"></a>
-<h2 id="原料"><strong>原料</strong></h2>
-<ol style="list-style-type: decimal">
-<li><p>RFID读卡模块RC522串口读写器13.56mhz ic卡射频模块开发板</p></li>
-<li><p>Springboot</p></li>
-<li><p>mina</p></li>
-<li><p>串口转TCP工具（这个应该可以写代码实现的）</p></li>
-</ol>
-<div class="figure">
-<img src="http://wx3.sinaimg.cn/mw690/005ESWIfly1g1wd5q0keej30rs0fy7au.jpg" alt="1554789980225">
-<p class="caption">1554789980225</p>
-</div>
-<h2 id="效果">效果</h2>
-<div class="figure">
-<img src="http://wx1.sinaimg.cn/mw690/005ESWIfly1g1wd5qh8apj30jv0fsmy1.jpg" alt="1554790349923">
-<p class="caption">1554790349923</p>
-</div>
-<div class="figure">
-<img src="http://wx2.sinaimg.cn/mw690/005ESWIfly1g1wd5qtg12j31hc0sx49n.jpg" alt="1554790375069">
-<p class="caption">1554790375069</p>
-</div>
-<p>​ 其实控制台只要能出来这些HEX字符串基本上来说就没什么问题了。但是这个mina有一个坑，这个<code>messageReceived()</code>方法不执行，控制台能打印log但是就是拿不到，所以要照着这个<code>loggingFilter</code>自己写一个filter加到这个mina里面。</p>
-<p>​ 还有一种方法是在message后面换行他就认为结束来着，回调这个messageReceived，但是硬件上加换行肯定是行不通。</p>
-<!--￼0-->
-<!--￼1-->
-<p>​ 剩下的就再写一个接口就完事了。</p>
-<!--￼2-->
-<p>​ 开发板文档里面的东西其实挺多的，仅仅简单的实现了一个卡号。</p>
-<div class="figure">
-<img src="http://wx1.sinaimg.cn/mw690/005ESWIfly1g1wd5ridx4j31gm0pjgml.jpg" alt="1554790924875">
-<p class="caption">1554790924875</p>
-</div>
-<div class="figure">
-<img src="http://wx4.sinaimg.cn/mw690/005ESWIfly1g1wd5s0ws5j31hc0u0aeq.jpg" alt="1554790951726">
-<p class="caption">1554790951726</p>
-</div>
-<div class="figure">
-<img src="http://wx2.sinaimg.cn/mw690/005ESWIfly1g1wd5sey4qj310d0j7mxa.jpg" alt="1554790970725">
-<p class="caption">1554790970725</p>
-</div>
-<div class="figure">
-<img src="http://wx3.sinaimg.cn/mw690/005ESWIfly1g1wd5srcczj30jv0fs3zm.jpg" alt="1554791021883">
-<p class="caption">1554791021883</p>
-</div>
+<ul>
+<li>王刚/男/1997</li>
+<li>本科/中北大学计算机学院</li>
+<li>英语:CET4</li>
+<li>工作年限：1年</li>
+<li>技术博客：<a href="https://blog.csdn.net/u014559071" class="uri" target="_blank" rel="noopener">https://blog.csdn.net/u014559071</a></li>
+<li>Github：<a href="https://github.com/flyingxg" class="uri" target="_blank" rel="noopener">https://github.com/flyingxg</a></li>
+<li>期望职位：java开发</li>
+<li>期望薪资：7左右</li>
+<li>期望城市：太原</li>
+</ul>
+<h1 id="技能清单">技能清单</h1>
+<ul>
+<li>Web开发：了解JavaScript和vue、layui、bootstrap，thymeleaf</li>
+<li>数据库相关：MySQL、Redis</li>
+<li>版本管理：Svn/Git 了解docker</li>
+<li>java框架：springboot、ssm</li>
+</ul>
+<h1 id="工作经历">工作经历</h1>
+<h2 id="山西山峰集团科技有限公司-2018年6月">山西山峰集团科技有限公司 （ 2018年6月 ~ ）</h2>
+<h3 id="消防物联网项目">消防物联网项目</h3>
+<p>物联网协议的解析设备接入，后台代码书写，前端部分jsp页面编写。echarts展示，websocket报警推送，小程序后台对接等等。</p>
+<h3 id="官网项目">官网项目</h3>
+<p>官网首页的编写，移动端和PC端的切换自适应，权限的控制，文件上传和管理，新闻模块的书写等。</p>
+<h3 id="其他项目">其他项目</h3>
+<ul>
+<li>基于安卓和zigbee的智能家居</li>
+<li>基于windows10和zigbee的智能家居</li>
+<li>基于springboot和树莓派的智能家居</li>
+<li>基于springboot和RFID的食品溯源系统</li>
+</ul>
+<h1 id="联系方式">联系方式</h1>
+<ul>
+<li>手机：18434355600</li>
+<li>Email：942433943@qq.com</li>
+<li>QQ/微信号：942433943</li>
+</ul>
 
       
 
@@ -256,11 +240,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">springboot</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">RFID</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">简历</a>
         		</li>
       		
 		</ul>
@@ -316,7 +296,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/04/09/springboot结合rfid的一些坑/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/04/28/resume/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -330,15 +310,11 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/04/09/some-music/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          some music
-        
-      </div>
-    </a>
   
+    <a href="/2019/04/09/some-music/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">some music</div>
+      <i class="icon-circle-right"></i>
+    </a>
   
 </nav>
 
